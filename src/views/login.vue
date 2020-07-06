@@ -36,9 +36,14 @@ export default {
         })
         .then(res => {
           console.log(res.id);
-          this.$cookie.set("userId", res.id, { expires: "1M" });
+          this.$cookie.set("userId", res.id, { expires: "Session" });
           this.saveUserName(res.username);
-          this.$router.push("/index");
+          this.$router.push({
+            name: "index",
+            params: {
+              from: "login"
+            }
+          });
         });
     },
     ...mapActions(["saveUserName"])
