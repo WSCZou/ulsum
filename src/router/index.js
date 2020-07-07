@@ -26,13 +26,13 @@ const routes = [
         path: "/detail/:id",
         name: "detail",
         component: () => import("../views/detail.vue")
-      },
-      {
-        path: "/cart",
-        name: "cart",
-        component: () => import("../views/cart.vue")
       }
     ]
+  },
+  {
+    path: "/cart",
+    name: "cart",
+    component: () => import("../views/cart.vue")
   },
   {
     path: "/login",

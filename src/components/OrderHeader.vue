@@ -3,7 +3,7 @@
     <div class="nav-header" :class="{ is_fixed: isFixed }">
       <div class="container">
         <div class="header-logo">
-          <a href="/#/index"></a>
+          <a href="/#/index" @click="gotoIndex"></a>
         </div>
       </div>
     </div>
@@ -86,6 +86,14 @@ export default {
         document.documentElement.scrollTop ||
         document.body.scrollTop;
       this.isFixed = scrollTop > 152 ? true : false;
+    },
+    gotoIndex() {
+      this.$router.push({
+        name: "index",
+        params: {
+          from: "order"
+        }
+      });
     }
   }
 };

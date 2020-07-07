@@ -1,8 +1,11 @@
 <template>
   <div class="cart">
+    <OrderHeader></OrderHeader>
     <div class="container">
       <div class="cart-name">购物车</div>
-      <div class="allChecked">
+      <Loading v-if="loading"></Loading>
+      <NoData v-if="!list.length && !loading"></NoData>
+      <div class="allChecked" v-if="list.length">
         <el-checkbox class="checkbox" v-model="allChecked" @change="toggleAll"
           >全选
         </el-checkbox>
@@ -45,7 +48,7 @@
             </li>
           </ul>
         </el-col>
-        <el-col :xs="24" :sm="8">
+        <el-col :xs="24" :sm="8" v-if="list.length">
           <div class="cart-summary">
             <el-row :gutter="15">
               <el-col :xs="24" :sm="24"><div class="name">摘要</div></el-col>
@@ -79,22 +82,32 @@
         </el-col>
       </el-row>
     </div>
+    <NavFooter></NavFooter>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-
+import Loading from "./../components/Loading";
+import NoData from "./../components/NoData";
+import OrderHeader from "./../components/OrderHeader";
+import NavFooter from "./../components/NavFooter";
 export default {
   name: "cart",
-  components: {},
+  components: {
+    Loading,
+    NoData,
+    OrderHeader,
+    NavFooter
+  },
   data() {
     return {
       list: [], //商品列表
       allChecked: false, //是否全选
       cartTotalPrice: 0, //商品总金额
       checkedNum: 0, //选中商品数量,
-      num: 0 //单件物品数量
+      num: 0, //单件物品数量
+      loading: false //加载数据中
     };
   },
   mounted() {
@@ -103,7 +116,9 @@ export default {
   methods: {
     // 获取购物车列表
     getCartList() {
+      this.loading = true;
       this.axios.get("/carts").then(res => {
+        this.loading = false;
         this.renderData(res);
       });
     },
@@ -119,6 +134,7 @@ export default {
           })
           .then(res => {
             this.renderData(res);
+            this.$store.dispatch("saveCartCount", res.cartTotalQuantity);
           });
       }, 500);
     },
@@ -126,7 +142,6 @@ export default {
     isCheck(item) {
       let selected = item.productSelected;
       //selected = !item.productSelected;
-      console.log(selected);
       this.axios
         .put(`/carts/${item.productId}`, {
           selected
@@ -144,6 +159,7 @@ export default {
         })
         .then(res => {
           this.renderData(res);
+          this.$store.dispatch("saveCartCount", res.cartTotalQuantity);
         });
     },
     // 公共赋值

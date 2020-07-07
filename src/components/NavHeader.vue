@@ -169,7 +169,7 @@ export default {
   mounted() {
     this.getProductList();
     let params = this.$route.params;
-    if (params && params.from == "login") {
+    if (params && (params.from == "login" || params.from == "order")) {
       this.getCartCount();
     }
     window.addEventListener("scroll", this.initHeight);
@@ -224,7 +224,7 @@ export default {
         window.pageYOffset ||
         document.documentElement.scrollTop ||
         document.body.scrollTop;
-      this.isFixed = scrollTop > 152 ? true : false;
+      this.isFixed = scrollTop > 50 ? true : false;
     }
   }
 };
@@ -234,6 +234,7 @@ export default {
 @import "./../assets/scss/config.scss";
 @import "./../assets/scss/base.scss";
 @import "./../assets/scss/mixin.scss";
+
 .header {
   .nav-topbar {
     height: 39px;
